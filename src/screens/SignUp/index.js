@@ -1,10 +1,27 @@
-import React from 'react';
-import { TouchableOpacity } from 'react-native';
-import { View, Text, StyleSheet, TextInput} from 'react-native';
+import React, {useState} from 'react';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import auth from '@react-native-firebase/auth';
+import * as Animatable from 'react-native-animatable';
 
-import * as Animatable from 'react-native-animatable'
+export default function SignUp(){
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
-export default function SingIn(){
+    function signUp(){
+        auth()
+        .createUserWithEmailAndPassword(email, password)
+        .then(userCredential => {
+            console.log('user: ', userCredential);
+        }).catch(error => {
+            if(error.code === 'auth/email-already-in-use'){
+                console.log('email já existe');
+            }
+            if(error.code === 'auth/invalid-email'){
+                console.log('email inválido');
+            }
+        });
+    }   
+  
     return(
         <View style={styles.container}>
             <Animatable.View animation="fadeInLeft" delay={500} style={styles.containerHeader}>    
@@ -13,25 +30,27 @@ export default function SingIn(){
 
             <Animatable.View animation="fadeInUp" style={styles.containerForm}>
                 <Text style={styles.title}>E-mail</Text>
-                    <TextInput
-                        placeholder="Digite um email..."
-                        style={styles.input}
-                    />
+                <TextInput
+                    placeholder="Digite um email..."
+                    style={styles.input}
+                    value={email}
+                    onChangeText={setEmail}
+                />
+                
                 <Text style={styles.title}>Senha</Text>
-                    <TextInput
-                        placeholder="Sua senha"
-                        style={styles.input}
-                    />
-                <TouchableOpacity style={styles.button}>
-                    <Text style={styles.buttonText}>Acessar</Text>
-                </TouchableOpacity>
+                <TextInput
+                    placeholder="Sua senha"
+                    style={styles.input}
+                    value={password}
+                    onChangeText={setPassword}
+                    secureTextEntry={true} 
+                />
 
-                <TouchableOpacity style={styles.buttonRegister}>
-                    <Text style={styles.registerText}>Não possui uma conta? Cadastre-se</Text>
+                <TouchableOpacity style={styles.button} onPress={signUp}>
+                    <Text style={styles.buttonText}>Criar conta</Text>
                 </TouchableOpacity>
 
             </Animatable.View>
-
         </View>
     );
 }
@@ -41,17 +60,17 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#38a69d'
     },
-    containerHeader:   {
+    containerHeader: {
         marginTop: '14%',
         marginBottom: '8%',
         paddingStart: '5%',
     },
-    message:    {
+    message: {
         fontSize: 28,
         fontWeight: 'bold',
         color: '#fff'
     },
-    containerForm:  {
+    containerForm: {
         backgroundColor: '#fff',
         flex: 1,
         borderTopLeftRadius: 25,
@@ -59,11 +78,11 @@ const styles = StyleSheet.create({
         paddingStart: '5%',
         paddingEnd: '5%'
     },
-    title:  {
+    title: {
         fontSize: 20,
         marginTop: 28,
     },
-    input:  {
+    input: {
         borderBottomWidth: 1,
         height: 40,
         marginBottom: 12,
@@ -90,6 +109,4 @@ const styles = StyleSheet.create({
     registerText: {
         color: '#a1a1a1',
     }
-
-
-})
+});
