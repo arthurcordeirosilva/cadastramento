@@ -1,31 +1,34 @@
 import React, {useState} from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
-import auth from '@react-native-firebase/auth';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
+import { auth } from '../../config/firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import * as Animatable from 'react-native-animatable';
+import { useNavigation} from '@react-navigation/native'
 
-export default function SignUp(){
+export default function SignIn(){
+    const navigation = useNavigation();
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    function signUp(){
-        auth()
-        .createUserWithEmailAndPassword(email, password)
-        .then(userCredential => {
-            console.log('user: ', userCredential);
-        }).catch(error => {
-            if(error.code === 'auth/email-already-in-use'){
-                console.log('email já existe');
-            }
-            if(error.code === 'auth/invalid-email'){
-                console.log('email inválido');
-            }
-        });
+    const handleSignIn = async () => {
+     auth
+        try {
+            const userCredential = await signInWithEmailAndPassword(auth, email, password)
+            const user = userCredential.user;
+
+            console.log("logado com sucesso", user)
+            navigation.navigate('Home')
+    } catch (error) {
+        console.log('autentication error:', error.message)
+    }
+        
     }   
   
     return(
         <View style={styles.container}>
             <Animatable.View animation="fadeInLeft" delay={500} style={styles.containerHeader}>    
-                <Text style={styles.message}>Bem-vindo</Text>
+                <Text style={styles.message}>Login</Text>
             </Animatable.View>
 
             <Animatable.View animation="fadeInUp" style={styles.containerForm}>
@@ -46,10 +49,13 @@ export default function SignUp(){
                     secureTextEntry={true} 
                 />
 
-                <TouchableOpacity style={styles.button} onPress={signUp}>
-                    <Text style={styles.buttonText}>Criar conta</Text>
+                <TouchableOpacity style={styles.button} onPress={handleSignIn}>
+                    <Text style={styles.buttonText}>Acessar</Text>
                 </TouchableOpacity>
 
+                <TouchableOpacity  onPress={ () => navigation.navigate('SignUp')} style={styles.buttonRegister} >
+                    <Text style={styles.registerText}>Não possui uma conta? Cadastre-se</Text>
+                </TouchableOpacity>
             </Animatable.View>
         </View>
     );
@@ -58,7 +64,7 @@ export default function SignUp(){
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#38a69d'
+        backgroundColor: 'black'
     },
     containerHeader: {
         marginTop: '14%',
@@ -71,7 +77,7 @@ const styles = StyleSheet.create({
         color: '#fff'
     },
     containerForm: {
-        backgroundColor: '#fff',
+        backgroundColor: '#FF6400',
         flex: 1,
         borderTopLeftRadius: 25,
         borderTopRightRadius: 25,
@@ -89,7 +95,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     button: {
-        backgroundColor: '#38a69d',
+        backgroundColor: 'black',
         width: '100%',
         borderRadius: 4,
         paddingVertical: 8,
@@ -107,6 +113,8 @@ const styles = StyleSheet.create({
         alignSelf: 'center'
     },
     registerText: {
-        color: '#a1a1a1',
+        color: 'black',
+        fontSize: 19,
+        fontWeight: 'bold'  
     }
 });

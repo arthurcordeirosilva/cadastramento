@@ -40,17 +40,17 @@ export default function Welcome(){
 const styles = StyleSheet.create({
     container:{
         flex: 1,
-        backgroundColor: '#38a69d'
+        backgroundColor: 'black'
     },
     containerLogo:{
         flex: 2,
-        backgroundColor: '#38a69d',
+        backgroundColor: 'black',
         justifyContent: 'center',
         alignItems: 'center'
     },
     containerForm:{
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: '#FF6400',
         borderTopLeftRadius: 25,
         borderTopRightRadius: 25,
         paddingStart: '5%',
@@ -63,7 +63,8 @@ const styles = StyleSheet.create({
         marginBottom: 12
     },
     text:{
-        color: '#dark-gray'
+        color: 'black',
+        fontSize: 20,
     },
     button:{
         position: 'absolute',
