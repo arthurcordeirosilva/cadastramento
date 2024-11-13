@@ -1,9 +1,9 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 
-import * as Animatable from 'react-native-animatable'
+import * as Animatable from 'react-native-animatable';
 
-import { useNavigation} from '@react-navigation/native'
+import { useNavigation} from '@react-navigation/native';
 export default function Welcome(){
     const navigation = useNavigation();
 
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     },
     containerForm:{
         flex: 1,
-        backgroundColor: '#FF6400',
+        backgroundColor: '#5a189a',
         borderTopLeftRadius: 25,
         borderTopRightRadius: 25,
         paddingStart: '5%',
@@ -60,10 +60,11 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: 'bold',
         marginTop: 28,
-        marginBottom: 12
+        marginBottom: 12,
+        color: '#FF9E00'
     },
     text:{
-        color: 'black',
+        color: '#ff9100',
         fontSize: 20,
     },
     button:{

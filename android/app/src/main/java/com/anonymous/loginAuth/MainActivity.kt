@@ -1,4 +1,4 @@
-package com.loginauth
+package com.anonymous.loginAuth
 
 import android.os.Build
 import android.os.Bundle

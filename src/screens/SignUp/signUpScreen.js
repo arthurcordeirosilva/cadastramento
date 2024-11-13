@@ -99,7 +99,7 @@ export default function SignUp() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#FF6400'
+        backgroundColor: '#5a189a'
     },
     containerHeader: {
         marginTop: '14%',

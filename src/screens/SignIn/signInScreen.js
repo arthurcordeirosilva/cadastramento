@@ -7,7 +7,6 @@ import { useNavigation} from '@react-navigation/native'
 
 export default function SignIn(){
     const navigation = useNavigation();
-
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -24,7 +23,7 @@ export default function SignIn(){
     }
         
     }   
-  
+    
     return(
         <View style={styles.container}>
             <Animatable.View animation="fadeInLeft" delay={500} style={styles.containerHeader}>    
@@ -77,7 +76,7 @@ const styles = StyleSheet.create({
         color: '#fff'
     },
     containerForm: {
-        backgroundColor: '#FF6400',
+        backgroundColor: '#5a189a',
         flex: 1,
         borderTopLeftRadius: 25,
         borderTopRightRadius: 25,
@@ -87,12 +86,14 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 20,
         marginTop: 28,
+        color: '#ff9e00'
     },
     input: {
         borderBottomWidth: 1,
         height: 40,
         marginBottom: 12,
         fontSize: 16,
+        color:'#ff9e00',
     },
     button: {
         backgroundColor: 'black',

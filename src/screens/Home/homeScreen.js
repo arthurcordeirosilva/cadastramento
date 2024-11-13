@@ -1,62 +1,99 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, Alert, Button } from 'react-native';
+import MapView, { Marker } from 'react-native-maps';
+import { requestForegroundPermissionsAsync,
+     getCurrentPositionAsync, 
+     LocationObject,
+      watchPositionAsync,
+      LocationAccuracy,
+     } from 'expo-location';
 
-import * as Animatable from 'react-native-animatable'
+export default function Home() {
+    const [location, setLocation] = useState(null);
+    const [permissionGranted, setPermissionGranted] = useState(false);
+    const [locationHistory, setLocationHistory] = useState([])
 
-import { useNavigation} from '@react-navigation/native'
-export default function Welcome(){
-    const navigation = useNavigation();
+    async function requestLocationPermissions() {
+        const { granted } = await requestForegroundPermissionsAsync();
 
-    return(
+        if (granted) {
+            setPermissionGranted(true);
+            const currentPosition = await getCurrentPositionAsync();
+            setLocation(currentPosition);
+        } 
+    }
+
+    const handleSaveLocation = async function() {
+        locationHistory.push(location)
+
+        Alert.alert("Salvar Localização", "Localização salva com sucesso!", [
+            {text: "OK", onPress: () => console.log("OK Pressed")},
+        ])
+    }
+
+    useEffect(() => {
+        requestLocationPermissions();
+    }, []);
+
+    useEffect(() => {
+        watchPositionAsync({
+            accuracy: LocationAccuracy.Highest,
+            timeInterval: 1000,
+            distanceInterval: 1,
+        }, (response) =>{
+            // console.log("nova localização! =>", response);
+            setLocation(response);
+         })
+    }, []);
+
+    return (
         <View style={styles.container}>
-            <Animatable.View delay={600} animation="flipInY" style={styles.texto}>
+            {
+                location &&
+                <MapView
+                style ={styles.map}
+                initialRegion={{
+                    latitude: location.coords.latitude,
+                    longitude: location.coords.longitude,
+                    latitudeDelta: 0.005,
+                    longitudeDelta: 0.005,
+                }}
+                >
+                    <Marker
+                    coordinate={{
+                        latitude: location.coords.latitude,
+                    longitude: location.coords.longitude,
+                    }}
+                    />
+                </MapView>
 
-                <Text style={styles.textoStilo}>Seja Bem Vindo</Text>
-                 </Animatable.View>
-        <View style={styles.containerLogo}>
-          
-        </View>
+            }
 
-      
+            <View style={{
+                position: 'absolute',
+                bottom: 32,
+            }}>
+                <Button title='Salvar localização' onPress={() => {
+                    handleSaveLocation();
+                }}/>
+            </View>
         </View>
     );
 }
+
 const styles = StyleSheet.create({
-    container:{
+    container: {
         flex: 1,
-        backgroundColor: '#FF6400'
-    },
-    texto:{
-        backgroundColor: 'black',
+        backgroundColor: '#ffffff',
         justifyContent: 'center',
         alignItems: 'center',
-        paddingTop: 100,
-        paddingBottom: 100,
-        borderRadius: 30,
-        marginTop: 100,
-    
     },
-    textoStilo:{
+    text: {
         color: '#fff',
-        fontSize: 30,
-        fontWeight: 'bold'
+        fontSize: 18,
     },
-    containerForm:{
+    map:{
         flex: 1,
-        backgroundColor: '#fff',
-        borderTopLeftRadius: 25,
-        borderTopRightRadius: 25,
-        paddingStart: '5%',
-        paddingEnd: '5%'
-    },
-    title:{
-        fontSize: 24,
-        fontWeight: 'bold',
-        marginTop: 28,
-        marginBottom: 12
-    },
-    text:{
-        color: '#dark-gray'
-    },
-   
-})
+        width: '100%'
+    }
+});
